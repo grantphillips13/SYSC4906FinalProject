@@ -1,0 +1,49 @@
+#include <iostream>
+#include <memory>
+#include <string>
+#include <typeinfo>
+#include <cadmium/modeling/celldevs/grid/coupled.hpp>
+#include <cadmium/simulation/logger/csv.hpp>
+#include <cadmium/simulation/root_coordinator.hpp>
+#include "include/flood_cell.hpp"
+
+using namespace cadmium;
+using namespace cadmium::celldevs;
+
+std::shared_ptr<GridCell<flood_state, double>> addGridCell(
+	const coordinates& cellId,
+	const std::shared_ptr<const GridCellConfig<flood_state, double>>& cellConfig
+) {
+	const auto& cellModel = cellConfig->cellModel;
+
+	if (cellModel == "flood") {
+		return std::make_shared<flood_cell>(cellId, cellConfig);
+	}
+
+	throw std::bad_typeid();
+}
+
+int main(int argc, char** argv) {
+	if (argc < 2) {
+		std::cout << "Usage: " << argv[0]
+				  << " SCENARIO_CONFIG.json [MAX_SIMULATION_TIME(default: 500)]\n";
+		return -1;
+	}
+
+	const std::string configFilePath = argv[1];
+	const double simTime = (argc > 2) ? std::stod(argv[2]) : 500.0;
+
+	auto model = std::make_shared<GridCellDEVSCoupled<flood_state, double>>(
+		"flood", addGridCell, configFilePath
+	);
+	model->buildModel();
+
+	auto rootCoordinator = RootCoordinator(model);
+	rootCoordinator.setLogger<CSVLogger>("flood_log.csv", ";");
+
+	rootCoordinator.start();
+	rootCoordinator.simulate(simTime);
+	rootCoordinator.stop();
+
+	return 0;
+}
