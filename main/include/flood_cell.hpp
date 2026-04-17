@@ -1,24 +1,25 @@
 #ifndef SYSC4906_FLOOD_CELL_HPP_
 #define SYSC4906_FLOOD_CELL_HPP_
 
+#include <algorithm>
 #include <memory>
+#include <string>
 #include <unordered_map>
-#include <vector>
-#include <cadmium/modeling/celldevs/grid/cell.hpp>
-#include <cadmium/modeling/celldevs/grid/config.hpp>
+#include <cadmium/modeling/celldevs/asymm/cell.hpp>
+#include <cadmium/modeling/celldevs/asymm/config.hpp>
 #include "flood_state.hpp"
 
 using namespace cadmium::celldevs;
 
-class flood_cell : public GridCell<flood_state, double> {
+class flood_cell : public AsymmCell<flood_state, double> {
 public:
-	flood_cell(const std::vector<int>& id,
-			   const std::shared_ptr<const GridCellConfig<flood_state, double>>& config)
-		: GridCell<flood_state, double>(id, config) {}
+	flood_cell(const std::string& id,
+			   const std::shared_ptr<const AsymmCellConfig<flood_state, double>>& config)
+		: AsymmCell<flood_state, double>(id, config) {}
 
 	[[nodiscard]] flood_state localComputation(
 		flood_state state,
-		const std::unordered_map<std::vector<int>, NeighborData<flood_state, double>>& neighborhood
+		const std::unordered_map<std::string, NeighborData<flood_state, double>>& neighborhood
 	) const override {
 		// Walls block water flow
 		if (state.blocked) {
@@ -31,26 +32,14 @@ public:
 
 		for (const auto& [neighbor_id, neighbor_data] : neighborhood) {
 			const auto& n = *(neighbor_data.state);
-			const bool is_self = std::all_of(
-				neighbor_id.begin(), neighbor_id.end(),
-				[](int v) { return v == 0; }
-			);
-
-			if (!is_self && !n.blocked) {
+			if (!n.blocked) {
 				max_neighbor_water = std::max(max_neighbor_water, n.water);
 			}
 		}
 
 		// If a neighbor has more water than us, spread into us
-		if (max_neighbor_water > state.water) {
+		if (max_neighbor_water > state.water + 1) {
 			state.water = max_neighbor_water - 1;
-		}
-		// Add water at source cell
-		if (state.elevation == 0) {
-			static int counter = 0;
-			if (++counter % 3 == 0 && state.water < 10) {
-				state.water = std::min(10, state.water + 1);
-			}
 		}
 
 		return state;

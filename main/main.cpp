@@ -2,7 +2,8 @@
 #include <memory>
 #include <string>
 #include <typeinfo>
-#include <cadmium/modeling/celldevs/grid/coupled.hpp>
+#include <cadmium/modeling/celldevs/asymm/coupled.hpp>
+#include <cadmium/modeling/celldevs/asymm/config.hpp>
 #include <cadmium/simulation/logger/csv.hpp>
 #include <cadmium/simulation/root_coordinator.hpp>
 #include "include/flood_cell.hpp"
@@ -10,16 +11,13 @@
 using namespace cadmium;
 using namespace cadmium::celldevs;
 
-std::shared_ptr<GridCell<flood_state, double>> addGridCell(
-	const coordinates& cellId,
-	const std::shared_ptr<const GridCellConfig<flood_state, double>>& cellConfig
+std::shared_ptr<AsymmCell<flood_state, double>> addFloodCell(
+	const std::string& cellId,
+	const std::shared_ptr<const AsymmCellConfig<flood_state, double>>& cellConfig
 ) {
-	const auto& cellModel = cellConfig->cellModel;
-
-	if (cellModel == "flood") {
+	if (cellConfig->cellModel == "flood") {
 		return std::make_shared<flood_cell>(cellId, cellConfig);
 	}
-
 	throw std::bad_typeid();
 }
 
@@ -33,8 +31,8 @@ int main(int argc, char** argv) {
 	const std::string configFilePath = argv[1];
 	const double simTime = (argc > 2) ? std::stod(argv[2]) : 500.0;
 
-	auto model = std::make_shared<GridCellDEVSCoupled<flood_state, double>>(
-		"flood", addGridCell, configFilePath
+	auto model = std::make_shared<AsymmCellDEVSCoupled<flood_state, double>>(
+		"flood", addFloodCell, configFilePath
 	);
 	model->buildModel();
 
