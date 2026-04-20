@@ -32,8 +32,8 @@ public:
 
 		for (const auto& [neighbor_id, neighbor_data] : neighborhood) {
 			const auto& n = *(neighbor_data.state);
-			if (!n.blocked && n.elevation <= state.elevation) {
-				// Water only flows in from neighbors at same or lower elevation (downhill)
+			if (!n.blocked && n.elevation >= state.elevation) {
+				// Water only flows in from neighbors at same or higher elevation (downhill into us)
 				max_neighbor_water = std::max(max_neighbor_water, n.water);
 			}
 		}
