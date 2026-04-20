@@ -12,14 +12,11 @@ struct flood_state {
 	flood_state() : water(0), elevation(0), blocked(0) {}
 };
 
-// operator overload to print cell state as an encoded scalar:
-//   -2 = blocked (wall)
-//   -1 = elevated terrain (dry)
-//    0..10 = water level (works for both normal and elevated flooded cells)
+// operator overload to print all state fields for multi-panel viewer support.
+// NOTE: The web viewer maps tuple positions by its internal state-key order.
+// Using <blocked,elevation,water> aligns panels correctly for this model.
 std::ostream& operator<<(std::ostream& os, const flood_state& state) {
-	if (state.blocked)               os << -2;
-	else if (state.elevation == 1 && state.water == 0) os << -1;
-	else                             os << state.water;
+	os << "<" << state.blocked << "," << state.elevation << "," << state.water << ">";
 	return os;
 }
 

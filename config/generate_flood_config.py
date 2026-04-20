@@ -94,29 +94,43 @@ viewer_config = {
         "default": {
             "delay": "inertial",
             "model": "flood",
-            "state": {"water": 0},
+            "state": {"blocked": 0, "elevation": 0, "water": 0},
             "neighborhood": [
                 {"type": "moore", "range": 1}
             ]
         },
         "water_source": {
-            "state": {"water": SOURCE_WATER},
+            "state": {"blocked": 0, "elevation": 0, "water": SOURCE_WATER},
             "cell_map": [[SOURCE[0], SOURCE[1]]]
         }
     },
     "viewer": [
         {
             "field": "water",
-            "breaks": [-3, -2, -1, 0, 2, 4, 6, 8, 10],
+            "breaks": [-0.5, 0.5, 2.5, 4.5, 6.5, 8.5, 10.5],
             "colors": [
-                [20,  20,  20],
-                [160, 120, 60],
                 [235, 235, 235],
                 [205, 225, 255],
                 [160, 200, 255],
                 [110, 170, 245],
                 [60,  130, 225],
                 [20,  80,  180]
+            ]
+        },
+        {
+            "field": "elevation",
+            "breaks": [-0.5, 0.5, 1.5],
+            "colors": [
+                [235, 235, 235],
+                [160, 120, 60]
+            ]
+        },
+        {
+            "field": "blocked",
+            "breaks": [-0.5, 0.5, 1.5],
+            "colors": [
+                [235, 235, 235],
+                [20,  20,  20]
             ]
         }
     ]

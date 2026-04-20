@@ -42,6 +42,23 @@ void removeSepLineIfPresent(const std::string& filename) {
 	out << remaining.str();
 }
 
+void removeOutputNeighborhoodRows(const std::string& filename) {
+	std::ifstream in(filename);
+	if (!in.is_open()) return;
+
+	std::ostringstream filtered;
+	std::string line;
+	while (std::getline(in, line)) {
+		if (line.find(";outputNeighborhood;") == std::string::npos) {
+			filtered << line << "\n";
+		}
+	}
+	in.close();
+
+	std::ofstream out(filename, std::ios::trunc);
+	out << filtered.str();
+}
+
 int main(int argc, char** argv) {
 	if (argc < 2) {
 		std::cout << "Usage: " << argv[0]
@@ -64,6 +81,7 @@ int main(int argc, char** argv) {
 	rootCoordinator.simulate(simTime);
 	rootCoordinator.stop();
 	removeSepLineIfPresent("flood_log.csv");
+	removeOutputNeighborhoodRows("flood_log.csv");
 
 	return 0;
 }
