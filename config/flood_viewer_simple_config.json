@@ -15,9 +15,9 @@
       "delay": "inertial",
       "model": "flood",
       "state": {
-        "blocked": 0,
+        "water": 0,
         "elevation": 0,
-        "water": 0
+        "blocked": 0
       },
       "neighborhood": [
         {
@@ -28,9 +28,9 @@
     },
     "water_source": {
       "state": {
-        "blocked": 0,
+        "water": 10,
         "elevation": 0,
-        "water": 10
+        "blocked": 0
       },
       "cell_map": [
         [

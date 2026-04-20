@@ -12,11 +12,9 @@ struct flood_state {
 	flood_state() : water(0), elevation(0), blocked(0) {}
 };
 
-// operator overload to print all state fields for multi-panel viewer support.
-// NOTE: The web viewer maps tuple positions by its internal state-key order.
-// Using <blocked,elevation,water> aligns panels correctly for this model.
+// operator overload to print all state fields for multi-panel viewer support
 std::ostream& operator<<(std::ostream& os, const flood_state& state) {
-	os << "<" << state.blocked << "," << state.elevation << "," << state.water << ">";
+	os << "<" << state.water << "," << state.elevation << "," << state.blocked << ">";
 	return os;
 }
 

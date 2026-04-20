@@ -94,13 +94,13 @@ viewer_config = {
         "default": {
             "delay": "inertial",
             "model": "flood",
-            "state": {"blocked": 0, "elevation": 0, "water": 0},
+            "state": {"water": 0, "elevation": 0, "blocked": 0},
             "neighborhood": [
                 {"type": "moore", "range": 1}
             ]
         },
         "water_source": {
-            "state": {"blocked": 0, "elevation": 0, "water": SOURCE_WATER},
+            "state": {"water": SOURCE_WATER, "elevation": 0, "blocked": 0},
             "cell_map": [[SOURCE[0], SOURCE[1]]]
         }
     },
