@@ -20,7 +20,7 @@ std::ostream& operator<<(std::ostream& os, const flood_state& state) {
 
 // operator!= overload to compare two flood_state objects
 bool operator!=(const flood_state& c1, const flood_state& c2) {
-	return c1.water != c2.water;
+	return c1.water != c2.water || c1.elevation != c2.elevation || c1.blocked != c2.blocked;
 }
 
 // parse JSON config to populate flood_state

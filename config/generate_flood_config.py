@@ -3,13 +3,14 @@
 Generates an Asymmetric Cell-DEVS JSON config for the flood simulation.
 Each cell is named "r_ROW_COL" and its Moore neighborhood is listed explicitly.
 """
-import json, sys
+import json, sys, os
 
 ROWS            = 20
 COLS            = 20
 SIM_TIME        = 50
-MODEL_OUT_FILE  = "flood_simple_config.json"
-VIEWER_OUT_FILE = "flood_viewer_simple_config.json"
+_DIR            = os.path.dirname(os.path.abspath(__file__))
+MODEL_OUT_FILE  = os.path.join(_DIR, "flood_simple_config.json")
+VIEWER_OUT_FILE = os.path.join(_DIR, "flood_viewer_simple_config.json")
 
 # Source cell
 SOURCE      = (10, 10)
@@ -19,11 +20,14 @@ SOURCE_WATER = 10
 RIDGE_COLS  = {0}
 ELEVATION   = 1
 
+# Elevated block to the right of source (col 13-14, rows 7-13) — for testing elevation barrier
+ELEVATED_CELLS = {(r, c) for r in range(7, 14) for c in range(13, 15)}
+
 # Wall segment: cells (row, col)
 WALLS = {(9,7),(9,8),(9,9),(9,10),(9,11),(9,12)}
 
 def cell_id(r, c):
-    return f"[{r},{c}]"
+    return f"({r},{c})"
 
 def moore_neighbors(r, c):
     """Return list of (row, col) for all valid Moore neighbors."""
@@ -55,7 +59,7 @@ for r in range(ROWS):
 
         if (r, c) == SOURCE:
             state["water"] = SOURCE_WATER
-        if c in RIDGE_COLS:
+        if c in RIDGE_COLS or (r, c) in ELEVATED_CELLS:
             state["elevation"] = ELEVATION
         if (r, c) in WALLS:
             state["blocked"] = 1
@@ -90,17 +94,16 @@ viewer_config = {
         "default": {
             "delay": "inertial",
             "model": "flood",
-            "state": {"water": 0, "elevation": 0, "blocked": 0},
+            "state": {"water": 0},
             "neighborhood": [
                 {"type": "moore", "range": 1}
             ]
         },
         "water_source": {
-            "state": {"water": SOURCE_WATER, "elevation": 0, "blocked": 0},
+            "state": {"water": SOURCE_WATER},
             "cell_map": [[SOURCE[0], SOURCE[1]]]
         }
     },
-    "filter": {"port_name": [""]},
     "viewer": [
         {
             "field": "water",
