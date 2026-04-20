@@ -51,11 +51,6 @@ for r in range(ROWS):
     for c in range(COLS):
         cid = cell_id(r, c)
 
-        # Build neighborhood: neighbor_id -> vicinity (1.0 for all)
-        neighborhood = {}
-        for (nr, nc) in moore_neighbors(r, c):
-            neighborhood[cell_id(nr, nc)] = 1.0
-
         state = {"water": 0, "elevation": 0, "blocked": 0}
 
         if (r, c) == SOURCE:
@@ -64,6 +59,17 @@ for r in range(ROWS):
             state["elevation"] = ELEVATION
         if (r, c) in WALLS:
             state["blocked"] = 1
+
+        # Blocked cells have no neighborhood — they are isolated from flow
+        if state["blocked"]:
+            cells[cid] = {"state": state, "neighborhood": {}}
+            continue
+
+        # Non-blocked cells: only include non-blocked neighbors
+        neighborhood = {}
+        for (nr, nc) in moore_neighbors(r, c):
+            if (nr, nc) not in WALLS:
+                neighborhood[cell_id(nr, nc)] = 1.0
 
         cells[cid] = {
             "state": state,

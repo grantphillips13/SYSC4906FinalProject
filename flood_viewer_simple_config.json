@@ -1,0 +1,94 @@
+{
+  "scenario": {
+    "shape": [
+      20,
+      20
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "wrapped": false
+  },
+  "cells": {
+    "default": {
+      "delay": "inertial",
+      "model": "flood",
+      "state": {
+        "water": 0,
+        "elevation": 0,
+        "blocked": 0
+      },
+      "neighborhood": [
+        {
+          "type": "moore",
+          "range": 1
+        }
+      ]
+    },
+    "water_source": {
+      "state": {
+        "water": 10,
+        "elevation": 0,
+        "blocked": 0
+      },
+      "cell_map": [
+        [
+          10,
+          10
+        ]
+      ]
+    }
+  },
+  "filter": {
+    "port_name": [
+      ""
+    ]
+  },
+  "viewer": [
+    {
+      "field": "water",
+      "breaks": [
+        -1,
+        0,
+        2,
+        4,
+        6,
+        8,
+        10
+      ],
+      "colors": [
+        [
+          235,
+          235,
+          235
+        ],
+        [
+          205,
+          225,
+          255
+        ],
+        [
+          160,
+          200,
+          255
+        ],
+        [
+          110,
+          170,
+          245
+        ],
+        [
+          60,
+          130,
+          225
+        ],
+        [
+          20,
+          80,
+          180
+        ]
+      ]
+    }
+  ]
+}

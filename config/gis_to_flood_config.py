@@ -169,9 +169,23 @@ def main() -> None:
                 if state["blocked"] == 1:
                     state["water"] = 0
 
+            # Blocked cells are isolated — not connected to any neighbor
+            if state["blocked"]:
+                cells[cell_id(r, c)] = {"state": state, "neighborhood": {}}
+                continue
+
+            # Non-blocked: exclude blocked neighbors from neighborhood
+            neighborhood = {
+                nid: v
+                for nid, v in moore_neighbors(r, c, rows, cols).items()
+                if blocked_sampled is None or blocked_sampled[
+                    int(nid[1:nid.index(",")]),
+                    int(nid[nid.index(",")+1:-1])
+                ] == 0
+            }
             cells[cell_id(r, c)] = {
                 "state": state,
-                "neighborhood": moore_neighbors(r, c, rows, cols),
+                "neighborhood": neighborhood,
             }
 
     model_config = {"cells": cells}
