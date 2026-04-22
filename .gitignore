@@ -9,8 +9,23 @@ cmake_install.cmake
 Makefile
 compile_commands.json
 
+# Data and GIS files
+/data/
+
 # Logs and simulation outputs
 *.csv
+
+# Python cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
 
 # Editor/OS files
 .vscode/
