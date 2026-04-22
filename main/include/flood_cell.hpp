@@ -67,13 +67,35 @@ public:
 		return valid;
 	}
 
+	[[nodiscard]] std::vector<const flood_state*> collectActiveNeighbors(
+		const flood_state& current,
+		const std::unordered_map<std::string, NeighborData<flood_state, double>>& neighborhood
+	) const {
+		auto valid = collectValidNeighbors(current, neighborhood);
+		std::vector<const flood_state*> active;
+		active.reserve(valid.size());
+
+		for (const auto* n : valid) {
+			if (n->water > 1e-9 || isSourceCell(*n) || isRainCell(*n)) {
+				active.push_back(n);
+			}
+		}
+
+		return active;
+	}
+
 	[[nodiscard]] double computeNormalTransition(
 		const flood_state& state,
-		const std::vector<const flood_state*>& valid_neighbors
+		const std::vector<const flood_state*>& active_neighbors
 	) const {
 		double next = state.water;
-		for (const auto* n : valid_neighbors) {
-			next -= (state.water - n->water) / 9.0;
+		for (const auto* n : active_neighbors) {
+			double transfer = (n->water - state.water) / 9.0;
+			if (transfer > 0.0 && n->elevation > state.elevation) {
+				const double slope_drop = static_cast<double>(n->elevation - state.elevation);
+				transfer *= (1.0 + 0.25 * slope_drop);
+			}
+			next += transfer;
 		}
 		return next;
 	}
@@ -107,6 +129,7 @@ public:
 		const std::unordered_map<std::string, NeighborData<flood_state, double>>& neighborhood
 	) const override {
 		auto valid_neighbors = collectValidNeighbors(state, neighborhood);
+		auto active_neighbors = collectActiveNeighbors(state, neighborhood);
 
 		double next_water = 0.0;
 		if (isBlockedCell(state)) {
@@ -114,7 +137,7 @@ public:
 		} else if (isSourceCell(state)) {
 			next_water = computeSourceTransition(state, valid_neighbors);
 		} else {
-			next_water = computeNormalTransition(state, valid_neighbors);
+			next_water = computeNormalTransition(state, active_neighbors);
 		}
 
 		state.water = applyRainAndClamp(next_water, state);
