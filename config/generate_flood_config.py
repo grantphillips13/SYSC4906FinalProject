@@ -15,6 +15,15 @@ VIEWER_OUT_FILE = os.path.join(_DIR, "flood_viewer_simple_config.json")
 # Source cell
 SOURCE      = (10, 10)
 SOURCE_WATER = 10
+SOURCE_LEVEL = 10.0
+
+# Optional rain sources (set amount > 0 for these cells)
+RAIN_CELLS = {}
+
+CELL_TYPE_NORMAL  = 0
+CELL_TYPE_BLOCKED = 1
+CELL_TYPE_SOURCE  = 2
+CELL_TYPE_RAIN    = 3
 
 # Elevation ridge: column 0
 RIDGE_COLS  = {0}
@@ -47,7 +56,14 @@ cells = {}
 cells["default"] = {
     "delay": "inertial",
     "model": "flood",
-    "state": {"water": 0, "elevation": 0, "blocked": 0}
+    "state": {
+        "water": 0.0,
+        "elevation": 0,
+        "blocked": 0,
+        "cell_type": CELL_TYPE_NORMAL,
+        "rain_amount": 0.0,
+        "source_level": 0.0
+    }
 }
 
 # Define every cell with its explicit Moore neighborhood
@@ -55,14 +71,27 @@ for r in range(ROWS):
     for c in range(COLS):
         cid = cell_id(r, c)
 
-        state = {"water": 0, "elevation": 0, "blocked": 0}
+        state = {
+            "water": 0.0,
+            "elevation": 0,
+            "blocked": 0,
+            "cell_type": CELL_TYPE_NORMAL,
+            "rain_amount": 0.0,
+            "source_level": 0.0
+        }
 
         if (r, c) == SOURCE:
             state["water"] = SOURCE_WATER
+            state["cell_type"] = CELL_TYPE_SOURCE
+            state["source_level"] = SOURCE_LEVEL
         if c in RIDGE_COLS or (r, c) in ELEVATED_CELLS:
             state["elevation"] = ELEVATION
         if (r, c) in WALLS:
             state["blocked"] = 1
+            state["cell_type"] = CELL_TYPE_BLOCKED
+        if (r, c) in RAIN_CELLS:
+            state["cell_type"] = CELL_TYPE_RAIN
+            state["rain_amount"] = float(RAIN_CELLS[(r, c)])
 
         # Blocked cells have no neighborhood — they are isolated from flow
         if state["blocked"]:
