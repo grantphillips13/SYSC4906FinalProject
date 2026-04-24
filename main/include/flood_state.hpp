@@ -7,8 +7,8 @@
 #include <nlohmann/json.hpp>
 
 struct flood_state {
-	double water;        // Water level (internal as double for fidelity)
-	int elevation;       // Elevation: 0 (low) or 1 (high)
+	double water;        // Water level 
+	int elevation;       // Elevation:
 	int blocked;         // Obstacle: 0 (open) or 1 (wall)
 	int cell_type;       // 0=normal, 1=blocked/house, 2=pond/source, 3=rain
 	double rain_amount;  // Optional rain contribution per step
