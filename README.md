@@ -234,6 +234,34 @@ Use the [Cell-DEVS Web Viewer](https://devssim.carleton.ca/cell-devs-viewer/):
 3. Load the generated `flood_log.csv`
 4. Step/animate to observe water propagation
 
+### Viewer Color Schemes
+
+**Water level** (0–10 discrete):
+
+| Level | Color | RGB |
+|---|---|---|
+| 0 | Light gray | (235, 235, 235) |
+| 1–2 | Light blue | (205, 225, 255) |
+| 3–4 | Sky blue | (160, 200, 255) |
+| 5–6 | Azure | (110, 170, 245) |
+| 7–8 | Cornflower | (60, 130, 225) |
+| 9–10 | Deep blue | (20, 80, 180) |
+
+**Elevation** (0–10 discrete):
+
+| Level | Color | Gradient |
+|---|---|---|
+| 0 | Light tan | (235, 235, 235) |
+| 10 | Dark brown | (72, 52, 30) |
+| 1–9 | Linear blend | Tan → Brown |
+
+**Blocked cells**:
+
+| State | Color |
+|---|---|
+| Open (0) | Light gray (235, 235, 235) |
+| Blocked (1) | Black (20, 20, 20) |
+
 ---
 
 ## Log Format
