@@ -10,8 +10,10 @@ CELL_TYPE_RAIN = 3
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(BASE_DIR)
-OUT_CFG = os.path.join(PROJECT_ROOT, "config", "painted")
-os.makedirs(OUT_CFG, exist_ok=True)
+OUT_MODEL = os.path.join(PROJECT_ROOT, "config", "painted", "model")
+OUT_VIEWER = os.path.join(PROJECT_ROOT, "config", "painted", "viewer")
+os.makedirs(OUT_MODEL, exist_ok=True)
+os.makedirs(OUT_VIEWER, exist_ok=True)
 
 
 def cell_id(r, c):
@@ -139,11 +141,11 @@ def write_scenario(name, source, source_water, source_level, elev_fn, walls=None
 	model = {"cells": cells}
 	viewer = make_viewer(source, source_water, max_elev)
 
-	model_path = os.path.join(OUT_CFG, f"{name}_config.json")
+	model_path = os.path.join(OUT_MODEL, f"{name}_config.json")
 	viewer_name = name
 	if viewer_name.startswith("flood_painted_"):
 		viewer_name = viewer_name.replace("flood_painted_", "painted_", 1)
-	viewer_path = os.path.join(OUT_CFG, f"flood_viewer_{viewer_name}_config.json")
+	viewer_path = os.path.join(OUT_VIEWER, f"flood_viewer_{viewer_name}_config.json")
 	with open(model_path, "w", encoding="utf-8") as f:
 		json.dump(model, f, indent=2)
 	with open(viewer_path, "w", encoding="utf-8") as f:

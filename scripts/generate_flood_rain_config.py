@@ -13,12 +13,10 @@ _DIR            = os.path.dirname(os.path.abspath(__file__))
 MODEL_OUT_FILE  = os.path.join(_DIR, "flood_rain_config.json")
 VIEWER_OUT_FILE = os.path.join(_DIR, "flood_viewer_rain_config.json")
 
-# Source cell (kept from base scenario)
 SOURCE       = (10, 10)
 SOURCE_WATER = 10
 SOURCE_LEVEL = 10.0
 
-# Optional rain sources: (row, col) -> rain amount added each step
 RAIN_CELLS = {
     (5, 5): 0.7,
     (5, 6): 0.7,
@@ -33,14 +31,11 @@ CELL_TYPE_BLOCKED = 1
 CELL_TYPE_SOURCE  = 2
 CELL_TYPE_RAIN    = 3
 
-# Elevation ridge: column 0
 RIDGE_COLS  = {0}
 ELEVATION   = 1
 
-# Elevated block to the right of source (col 13-14, rows 7-13)
 ELEVATED_CELLS = {(r, c) for r in range(7, 14) for c in range(13, 15)}
 
-# Wall segment: cells (row, col)
 WALLS = {(9,7),(9,8),(9,9),(9,10),(9,11),(9,12)}
 
 def cell_id(r, c):

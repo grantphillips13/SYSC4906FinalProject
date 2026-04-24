@@ -12,12 +12,11 @@ _DIR            = os.path.dirname(os.path.abspath(__file__))
 MODEL_OUT_FILE  = os.path.join(_DIR, "flood_simple_config.json")
 VIEWER_OUT_FILE = os.path.join(_DIR, "flood_viewer_simple_config.json")
 
-# Source cell
 SOURCE      = (10, 10)
 SOURCE_WATER = 10
 SOURCE_LEVEL = 10.0
 
-# Optional rain sources (set amount > 0 for these cells)
+
 RAIN_CELLS = {}
 
 CELL_TYPE_NORMAL  = 0
@@ -25,14 +24,14 @@ CELL_TYPE_BLOCKED = 1
 CELL_TYPE_SOURCE  = 2
 CELL_TYPE_RAIN    = 3
 
-# Elevation ridge: column 0
+
 RIDGE_COLS  = {0}
 ELEVATION   = 1
 
-# Elevated block to the right of source (col 13-14, rows 7-13) — for testing elevation barrier
+
 ELEVATED_CELLS = {(r, c) for r in range(7, 14) for c in range(13, 15)}
 
-# Wall segment: cells (row, col)
+
 WALLS = {(9,7),(9,8),(9,9),(9,10),(9,11),(9,12)}
 
 def cell_id(r, c):
@@ -52,7 +51,6 @@ def moore_neighbors(r, c):
 
 cells = {}
 
-# Default cell (used as template by Cadmium — overridden per cell below)
 cells["default"] = {
     "delay": "inertial",
     "model": "flood",
@@ -66,7 +64,6 @@ cells["default"] = {
     }
 }
 
-# Define every cell with its explicit Moore neighborhood
 for r in range(ROWS):
     for c in range(COLS):
         cid = cell_id(r, c)
@@ -93,12 +90,10 @@ for r in range(ROWS):
             state["cell_type"] = CELL_TYPE_RAIN
             state["rain_amount"] = float(RAIN_CELLS[(r, c)])
 
-        # Blocked cells have no neighborhood — they are isolated from flow
         if state["blocked"]:
             cells[cid] = {"state": state, "neighborhood": {}}
             continue
 
-        # Non-blocked cells: only include non-blocked neighbors
         neighborhood = {}
         for (nr, nc) in moore_neighbors(r, c):
             if (nr, nc) not in WALLS:

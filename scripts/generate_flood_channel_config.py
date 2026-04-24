@@ -48,15 +48,10 @@ def moore_neighbors(r, c):
     return neighbors
 
 
-# Build a descending channel path from source area to far basin:
-# segment A: row 4, col 4..13  -> elev 2
-# segment B: col 13, row 5..18 -> elev 1
-# segment C: row 18, col 14..24 -> elev 0
 CHANNEL_E2 = {(4, c) for c in range(4, 14)}
 CHANNEL_E1 = {(r, 13) for r in range(5, 19)}
 CHANNEL_E0 = {(18, c) for c in range(14, 25)}
 
-# Slightly widen the channel by one-cell shoulders
 CHANNEL_E2 |= {(5, c) for c in range(5, 12)}
 CHANNEL_E1 |= {(r, 12) for r in range(7, 17)}
 CHANNEL_E0 |= {(17, c) for c in range(16, 23)}
@@ -69,7 +64,7 @@ def elevation_at(r, c):
       3 = source pocket
       2,1,0 = descending channel to basin
     """
-    # Source pocket (still high, but lower than surrounding berm)
+
     if 3 <= r <= 6 and 3 <= c <= 6:
         return 3
 
@@ -80,7 +75,6 @@ def elevation_at(r, c):
     if (r, c) in CHANNEL_E2:
         return 2
 
-    # Everywhere else high so water prefers/downselects to channel
     return 4
 
 
