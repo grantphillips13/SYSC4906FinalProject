@@ -18,14 +18,12 @@ struct flood_state {
 		: water(0.0), elevation(0), blocked(0), cell_type(0), rain_amount(0.0), source_level(0.0) {}
 };
 
-// operator overload to print all state fields for multi-panel viewer support
 std::ostream& operator<<(std::ostream& os, const flood_state& state) {
 	const int water_display = std::clamp(static_cast<int>(std::lround(state.water)), 0, 10);
 	os << "<" << water_display << "," << state.elevation << "," << state.blocked << ">";
 	return os;
 }
 
-// operator!= overload to compare two flood_state objects
 bool operator!=(const flood_state& c1, const flood_state& c2) {
 	return std::fabs(c1.water - c2.water) > 1e-9
 		|| c1.elevation != c2.elevation
