@@ -236,10 +236,6 @@ def main():
 	write_scenario("flood_painted_fw_basin_pooling", (14, 12), 10, 10, elev_basin, max_elev=4)
 
 	# Scenario 5 (replacement): rain-fed urban plaza with drainage lane
-	# Terrain concept:
-	# - center plaza bowl (low) where rain pools,
-	# - a drainage lane to the right that lets water escape/flow,
-	# - surrounding higher ground and a few building blocks.
 	plaza = {(r, c) for r in range(9, 19) for c in range(8, 16)}
 	drain_lane = {(r, c) for r in range(12, 16) for c in range(16, 27)}
 	building_blocks = set()
@@ -269,7 +265,6 @@ def main():
 				if 0 <= rr < ROWS and 0 <= cc2 < COLS and (rr, cc2) not in building_blocks:
 					rain_cells[(rr, cc2)] = max(rain_cells.get((rr, cc2), 0.0), amt)
 
-	# keep nominal source at far corner with zero level so scenario behavior is rain-driven
 	write_scenario(
 		"flood_painted_fw_rain_plaza_drain",
 		(0, 0),
@@ -281,9 +276,8 @@ def main():
 		max_elev=4,
 	)
 
-	# Scenario 6: urban downhill (left -> right) with building barriers
+	# Scenario 6: urban downhill with building barriers
 	buildings = set()
-	# scattered building blocks (2x2 and 3x2 footprints)
 	for r0, c0, h, w in [
 		(4, 6, 2, 2), (8, 10, 3, 2), (5, 16, 2, 3),
 		(12, 7, 2, 2), (14, 13, 3, 2), (10, 20, 2, 2),
@@ -295,10 +289,8 @@ def main():
 				buildings.add((rr, cc))
 
 	def elev_urban(r, c):
-		# slow monotonic slope from left(high) to right(low): 4 -> 0
 		return max(0, 4 - (c * 5 // COLS))
 
-	# source on the left side so water traverses through urban obstacles
 	write_scenario(
 		"flood_painted_fw_urban_downhill",
 		(13, 2),
