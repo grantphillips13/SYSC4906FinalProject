@@ -289,14 +289,6 @@ grep "^[0-9]" flood_log.csv | awk -F ';' '{print $1, $2, $3}'
 
 ---
 
-## Architecture Notes
-
-- **Asymmetric Cell-DEVS**: Each cell computes transition based on its current state and all neighbors' states (no explicit message passing)
-- **Inertial Delays**: Output delay of 1.0 time unit per cell transition
-- **Discrete Elevation Quantization**: Continuous DEM elevations mapped to 11 levels via linear scaling and rounding
-- **No Flow Capacity**: Water can accumulate indefinitely (display clamping is output-only; internal model has no overflow logic)
-
----
 
 ## Troubleshooting
 
@@ -322,19 +314,6 @@ bash build.sh
 - Check that model config file contains valid cell definitions
 - Ensure `flood_sim` binary is up to date: `bash build.sh`
 
-### Python script errors (GIS generation)
-
-Install rasterio and numpy:
-
-```bash
-pip install rasterio numpy
-```
-
-If GDAL/rasterio fails to install, pre-built wheels may be available via conda:
-
-```bash
-conda install rasterio
-```
 
 ---
 
