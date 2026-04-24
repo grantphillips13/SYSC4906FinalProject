@@ -12,10 +12,7 @@ Key features:
 - Asymmetric cell neighborhoods (8-connected Moore)
 - Elevation-constrained water flow (no uphill propagation)
 - Optional rain injection and persistent water sources
-- Inertial delay propagation semantics
 - 11 discrete elevation levels (0–10)
-- Display clamping to [0,10] for visualization (internal water tracking uses double precision)
-
 ---
 
 ## File Organization
@@ -92,7 +89,7 @@ pip install rasterio numpy
 Build with the provided script:
 
 ```bash
-bash build.sh
+source build_sim.sh
 ```
 
 This script:
@@ -183,19 +180,6 @@ Each cell maintains 6 state fields:
 4. **Rain injection**: Rain cells receive `rain_amount` per step
 5. **Blocked cells**: Do not propagate or receive water
 
-### Normal Cell Transition
-
-$$\text{water}_{\text{next}} = \text{water}_{\text{current}} + \sum_{\text{valid neighbors}} \frac{\text{water}_{\text{neighbor}} - \text{water}_{\text{current}}}{9}$$
-
-Plus elevation-dependent slope bonus (up to +25% boost on steep slopes).
-
-### Source Cell Transition
-
-$$\text{water}_{\text{next}} = \max(0, \text{source\_level}) + \sum_{\text{valid neighbors}} \frac{\text{water}_{\text{neighbor}}}{9}$$
-
-### Display Clamping (Viewer Output Only)
-
-$$\text{water}_{\text{display}} = \text{clamp}(\lfloor \text{water}_{\text{internal}} \rfloor, 0, 10)$$
 
 ---
 
@@ -249,34 +233,6 @@ Use the [Cell-DEVS Web Viewer](https://devssim.carleton.ca/cell-devs-viewer/):
 2. Load the corresponding viewer config (e.g., `config/gis/viewer/flood_viewer_gis_Algonquin_base_config.json`)
 3. Load the generated `flood_log.csv`
 4. Step/animate to observe water propagation
-
-### Viewer Color Schemes
-
-**Water level** (0–10 discrete):
-
-| Level | Color | RGB |
-|---|---|---|
-| 0 | Light gray | (235, 235, 235) |
-| 1–2 | Light blue | (205, 225, 255) |
-| 3–4 | Sky blue | (160, 200, 255) |
-| 5–6 | Azure | (110, 170, 245) |
-| 7–8 | Cornflower | (60, 130, 225) |
-| 9–10 | Deep blue | (20, 80, 180) |
-
-**Elevation** (0–10 discrete):
-
-| Level | Color | Gradient |
-|---|---|---|
-| 0 | Light tan | (235, 235, 235) |
-| 10 | Dark brown | (72, 52, 30) |
-| 1–9 | Linear blend | Tan → Brown |
-
-**Blocked cells**:
-
-| State | Color |
-|---|---|
-| Open (0) | Light gray (235, 235, 235) |
-| Blocked (1) | Black (20, 20, 20) |
 
 ---
 
