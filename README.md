@@ -49,7 +49,7 @@ SYSC4906FinalProject/
 │   └── flood_sim                            # Compiled executable
 ├── build/                                   # Generated CMake build artifacts
 ├── CMakeLists.txt                           # Top-level CMake config
-├── build.sh                                 # Build script
+├── build_sim.sh                             # Build script
 └── README.md
 ```
 
@@ -305,14 +305,14 @@ If missing, set environment variable:
 
 ```bash
 export CADMIUM=/path/to/cadmium_v2/include
-bash build.sh
+bash build_sim.sh
 ```
 
 ### Simulation produces empty log
 
 - Verify config file paths are correct
 - Check that model config file contains valid cell definitions
-- Ensure `flood_sim` binary is up to date: `bash build.sh`
+- Ensure `flood_sim` binary is up to date: `bash build_sim.sh`
 
 
 ---
